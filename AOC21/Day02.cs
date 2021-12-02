@@ -11,7 +11,7 @@
 
         public override ValueTask<string> Solve_1()
         {
-            return new(Input.Aggregate<(string Direction, int Distance), (int H, int D), int>((0, 0), (agg, comm) =>
+            return new(Input.Aggregate((H: 0, D: 0), (agg, comm) =>
             {
                 switch (comm.Direction)
                 {
@@ -31,7 +31,7 @@
 
         public override ValueTask<string> Solve_2()
         {
-            return new(Input.Aggregate<(string Direction, int Distance), (int H, int D, int A), int>((0, 0, 0), (agg, comm) =>
+            return new(Input.Aggregate((H: 0, D: 0, A: 0), (agg, comm) =>
             {
                 switch (comm.Direction)
                 {
