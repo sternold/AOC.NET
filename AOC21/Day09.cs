@@ -6,15 +6,7 @@
 
         public Day09()
         {
-            var lines = FileReader.ReadAllLines(InputFilePath);
-            Input = lines.Select((line, i) => (Value: line, Index: i))
-                         .Aggregate(new int[lines.Count(), lines.First().Length], (agg, next)
-                            => next.Value.Select((c, i) => (Value: c.ToString(), Index: i))
-                                         .Aggregate(agg, (agg2, next2) =>
-                                            {
-                                                agg2[next.Index, next2.Index] = int.Parse(next2.Value);
-                                                return agg2;
-                                            }));
+            Input = FileReader.ReadAsGrid(InputFilePath);
         }
 
         public override ValueTask<string> Solve_1()
@@ -24,7 +16,7 @@
             {
                 for(int y = 0; y < Input.GetLength(1); y++)
                 {
-                    if(Neighbours(Input, x, y).All(n => n.Value > Input[x, y]))
+                    if(GridFunctions.Neighbours(Input, x, y, false).All(n => n.Value > Input[x, y]))
                     {
                         count += 1+Input[x, y];
                     }
@@ -43,7 +35,7 @@
                 {
                     if (!visited.Contains((x, y)))
                     {
-                        if (Neighbours(Input, x, y).All(n => n.Value > Input[x, y]))
+                        if (GridFunctions.Neighbours(Input, x, y, diagonals: false).All(n => n.Value > Input[x, y]))
                         {
                             var result = Visit(Input, (x, y), visited);
                             if (result.Any())
@@ -66,19 +58,11 @@
             }
             visited.Add(node);
             result.Add(node);
-            foreach (var childResult in Neighbours(grid, node.X, node.Y).Where(n => n.Value < 9).Select(n => Visit(grid, (n.X, n.Y), visited)))
+            foreach (var childResult in GridFunctions.Neighbours(grid, node.X, node.Y, diagonals: false).Where(n => n.Value < 9).Select(n => Visit(grid, (n.X, n.Y), visited)))
             {
                 result.AddRange(childResult);
             }
             return result;
-        }
-
-        public IEnumerable<(int X, int Y, int Value)> Neighbours(int[,] grid, int x, int y)
-        {
-            if (x - 1 >= 0) yield return (x - 1, y, grid[x - 1, y]);
-            if (x + 1 < grid.GetLength(0)) yield return (x + 1, y, grid[x + 1, y]);
-            if (y - 1 >= 0) yield return (x, y - 1, grid[x, y - 1]);
-            if (y + 1 < grid.GetLength(1)) yield return (x, y + 1, grid[x, y + 1]);
         }
     }
 }
