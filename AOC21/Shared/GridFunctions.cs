@@ -16,5 +16,11 @@
                 if (x + 1 < grid.GetLength(0) && y + 1 < grid.GetLength(1)) yield return (x + 1, y + 1, grid[x + 1, y + 1]);
             }
         }
+
+        public static async Task WriteAsync(int x, int y, char c)
+        {
+            Console.SetCursorPosition(x, y);
+            await Console.Out.WriteAsync(c);
+        }
     }
 }

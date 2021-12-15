@@ -8,6 +8,12 @@
             return text.Split(Environment.NewLine);
         }
 
+        public static IEnumerable<IEnumerable<string>> ReadAllParagraphs(string filename)
+        {
+            var text = File.ReadAllText(filename);
+            return text.Split(Environment.NewLine + Environment.NewLine, StringSplitOptions.RemoveEmptyEntries).Select(paragraph => paragraph.Split(Environment.NewLine));
+        }
+
         public static IEnumerable<int> ReadAllLinesAsInteger(string filename)
         {
             var text = File.ReadAllText(filename);
