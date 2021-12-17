@@ -43,19 +43,15 @@
         public long CalculateCost(int[,] grid, Coords start, Coords end)
         {
             bool[,] visited = new bool[grid.GetLength(0), grid.GetLength(1)];
-            var queue = new PriorityQueue<(IEnumerable<Coords> Coords, long Cost), long>(new List<((IEnumerable<Coords> Coords, long Cost), long)>{ ((new Coords[] { start }, 0L), 0L) });
-            while(queue.TryDequeue(out var coords, out var priority))
+            var queue = new PriorityQueue<(Coords Coord, long Cost), long>(new List<((Coords, long), long)>{ ((start, 0L), 0L) });
+            while(queue.TryDequeue(out var current, out var priority))
             {
-                var currentCoord = coords.Coords.Last();
-                if (visited[currentCoord.X, currentCoord.Y]) continue;
-                else visited[currentCoord.X, currentCoord.Y] = true;
-                if (currentCoord.X == end.X && currentCoord.Y == end.Y) {
-                    return coords.Cost;
-                        }
-                foreach(var nb in GridFunctions.Neighbours(grid, currentCoord.X, currentCoord.Y, false))
+                if (visited[current.Coord.X, current.Coord.Y]) continue;
+                else visited[current.Coord.X, current.Coord.Y] = true;
+                if (current.Coord.X == end.X && current.Coord.Y == end.Y) return current.Cost;
+                else foreach(var nb in GridFunctions.Neighbours(grid, current.Coord.X, current.Coord.Y, false))
                 {
-                    if (!coords.Coords.Contains(nb))
-                        queue.Enqueue((new List<Coords>(coords.Coords).Append(nb), coords.Cost + nb.Value), (end.X - nb.X) + (end.Y - nb.Y) + coords.Cost + nb.Value);
+                    queue.Enqueue((nb, current.Cost + nb.Value), (end.X - nb.X) + (end.Y - nb.Y) + current.Cost + nb.Value);
                 }
             }
             return 0L;
