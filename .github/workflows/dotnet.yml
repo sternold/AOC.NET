@@ -22,5 +22,5 @@ jobs:
     - name: Build
       run: dotnet build --no-restore -c Release
     - name: Output
-      working-directory: ./AOC21
+      working-directory: ./AOC22
       run: dotnet run --no-build -c Release -- all
